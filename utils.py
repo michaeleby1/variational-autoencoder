@@ -30,7 +30,7 @@ def get_all_text(files):
             response = request.urlopen(url)
             raw = response.read().decode('utf8')
             text = strip_headers(raw)
-            text = re.compile('\n').sub('', text)
+            text = re.compile('\n').sub(' ', text)
             full_text += text
             
         except (HTTPError) as e:
