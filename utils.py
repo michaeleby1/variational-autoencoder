@@ -4,9 +4,9 @@ import pandas as pd
 from urllib import request
 from urllib.error import HTTPError
 
-# ----------------------
-#  ETL PIPELINE
-# ----------------------
+# ---------------------------------------------------------------------------------------- #
+#   ETL Pipeline                                                                           #
+# ---------------------------------------------------------------------------------------- #
 
 def get_file_nums(author, df):
 
@@ -21,17 +21,17 @@ def get_file_nums(author, df):
 
 def get_all_text(files):    
     
-    text_dict = {'text': []}
+    full_text = ''
 
     for file in files:
-        
+
         try:
             url = f"http://www.gutenberg.org/files/{file}/{file}.txt"
             response = request.urlopen(url)
             raw = response.read().decode('utf8')
             text = strip_headers(raw)
             text = re.compile('\n').sub('', text)
-            text_dict['text'].append(text) 
+            full_text += text
             
         except (HTTPError) as e:
             
@@ -41,7 +41,7 @@ def get_all_text(files):
                 raw = response.read().decode('utf8')
                 text = strip_headers(raw)
                 text = re.compile('\n').sub('', text)
-                text_dict['text'].append(text)
+                full_text += text
                 
             except (HTTPError) as e2:    
                 print(f'{file} not found.')
@@ -49,4 +49,4 @@ def get_all_text(files):
         except UnicodeDecodeError as e3:
             print(f'Can\'t decode {file}')
             
-    return text_dict
+    return full_text
